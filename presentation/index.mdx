@@ -12,7 +12,7 @@ import Introspection from './introspection';
 # Roy Fielding & REST
 
 <Notes>
-  In 2000, Roy Fielding authored a landmark paper about how to structure hypermedia information systems.  A RESTful web app exposes information about itself in the form of resources.  It also enables the client to take actions on those resources, such as create new resources or change existing resources.
+In the year 2000, Roy Fielding authored a landmark paper about how to structure hypermedia information systems.  A RESTful web app exposes information about itself in the form of resources.  It also enables the client to take actions on those resources, such as create new resources or change existing resources.
 </Notes>
 
 ---
@@ -27,7 +27,9 @@ POST   /v1/example.com/products    - Create a new product
 DELETE /v1/example.com/products/42 - Delete product 42
 ```
 
-<Notes>We start off with an API that more or less follows RESTful conventions.  We can operate on the product resource by using the HTTP methods shown here.</Notes>
+<Notes>
+  We start off with an API that more or less follows RESTful conventions.  We can operate on the product resource by using the HTTP methods shown here.  Other resources folllow the same predictable convention.
+</Notes>
 
 ---
 export default CodeSlide
@@ -43,7 +45,9 @@ GET    /v1/example.com/products/42?brand=sonos
 GET    /v1/example.com/products/42?with=categories
 ```
 
-<Notes>As our product evolves to support the business, we have new client needs. Common example when supporting mobile apps is providing different versions of the same resource depending on the client.</Notes>
+<Notes>
+  As our product evolves to support the business, we have new client needs, so we need to provide different versions of the same resource depending on the client.. A common example is supporting mobile apps with smaller payloads.
+</Notes>
 
 ---
 export default CodeSlide
@@ -61,7 +65,9 @@ GET    /v2/example.com/products/42?brand=sonos
 GET    /v2/example.com/products/42?with=categories
 ```
 
-<Notes>And then some more time goes by and you realize that you need to fundamentally rework the data that you return, and that’s a breaking change, so you redo the endpoints and bump the version number.</Notes>
+<Notes>
+  And then some more time goes by and you realize that you need to fundamentally rework the data that you return, and that’s a breaking change, so you redo the endpoints and bump the version number.
+</Notes>
 
 ---
 
@@ -76,11 +82,19 @@ GET    /v2/example.com/products/42?with=categories
   </div>
 </div>
 
+<Notes>
+  But unfortunately, you can’t throw away your old API endpoints, because there are old clients that still rely on them.  You usually cannot force them to upgrade either. You’re stuck supporting (and testing, and upgrading) old endpoints forever.
+</Notes>
+
 ---
 
 <div style={{height: '80vh', maxWidth: 'none'}}>
   <img src="http://siliconvalleyism.com/images/sales-and-engineering.jpg" style={{maxWidth: '100%'}} />
 </div>
+
+<Notes>
+  On the other hand, your product people, mobile devs, and frontend devs are all harassing you to add new stuff all the time, because they have problems that only you can solve.
+</Notes>
 
 ---
 
@@ -89,6 +103,10 @@ export default LightSlide
 # Too many requests
 
 <img src="https://i.imgur.com/tId4Qn6.png" style={{marginTop: 50}} />
+
+<Notes>
+  A client has to make a bunch of HTTP calls to get the data required to display a single  view/page.  This is very inefficient, especially for mobile devices on networks with high latency.
+</Notes>
 
 ---
 export default CodeSlide
@@ -111,11 +129,19 @@ export default CodeSlide
   },
 ```
 
+<Notes>
+  REST endpoints typically return the entire resource.  But what if you only need a few fields, like name and email?  This wastes bandwidth, especially on mobile devices.
+</Notes>
+
 ---
 
 # Missing or incorrect documentation
 
 <img src="https://static.boredpanda.com/blog/wp-content/uploads/2014/10/packaging-fail-funny-you-had-one-job-19__605.jpg" style={{marginTop: 50}} />
+
+<Notes>
+  Often, API documentation doesn’t exist.  When it does exist, it’s often out of date. Correctness of documentation is not enforced because it isn’t generated from the actual source.
+</Notes>
 
 ---
 export default LightSlide
@@ -124,15 +150,27 @@ export default LightSlide
 
 ## a strongly-typed declarative query language
 
+<Notes>
+  GraphQL is a Facebook project that was used internally since 2012 and released publically in 2015. It’s a fundamentally new way to do APIs. It’s a spec and language independent.  The reference implementation is in JS, but it’s available in tons of other languages.
+</Notes>
+
 ---
 
 # Strongly-typed
+
+<Notes>
+  The strongly-typed part means that this language is type safe. Everyone speaking it (clients and servers) know what types of things are allowed in, and what kinds of data to expect in response, even across different programming languages.  It’s defined in the schema.
+</Notes>
 
 ---
 
 <img src="https://cdn-images-1.medium.com/max/2000/1*wLrhY74ZTD6_oD7H0eaeRg.gif" style={{maxWidth:'100%', maxHeight: '100%'}} />
 
 <Introspection>Introspective</Introspection>
+
+<Notes>
+  We can ask a GraphQL schema for information about what queries it supports. GraphQL allows us to do so using the introspection system.  This is used by tools to automatically generate documentation and generate query tools with autocompletion, etc.
+</Notes>
 
 ---
 export default CodeSlide
@@ -148,6 +186,10 @@ query {
   }
 }
 ```
+
+<Notes>
+  Declarative means that that you ask the server for data in the shape that you want it.  This is a GraphQL query called user. It kind of looks like JSON but with the values removed. This query specifies that we’re interested  in the user matching ID 123.  We’re requesting only three fields of whatever type user will return — the ID, name, and email fields.
+</Notes>
 
 ---
 export default CodeSlide
@@ -166,23 +208,39 @@ export default CodeSlide
 }
 ```
 
+<Notes>
+  The response gives you proper JSON in the shape that you asked for.  This is huge for a number of reasons.
+</Notes>
+
 ---
 export default CodeSlide
 
-  <BlockQuote>
-    <Quote textSize={60}>
-      Can you add this option to get the data back without this field and with that extra field for that new view I'm making?
-    </Quote>
-    <Cite>every frontend developer ever</Cite>
-  </BlockQuote>
+<BlockQuote>
+  <Quote textSize={60}>
+    Can you add this option to get the data back without this field and with that extra field for that new view I'm making?
+  </Quote>
+  <Cite>every frontend developer ever</Cite>
+</BlockQuote>
+
+<Notes>
+  You’re freeing up your frontend and mobile developers to Get Shit Done. They don’t need you to write new API endpoints every time they need data in a slightly different form for a slightly different view. They can compose the data they need in a single query - multiple resources in a single request!
+</Notes>
 
 ---
 
 # Mobile device latency and low-memory
 
+<Notes>
+  This is also a Big Deal for mobile clients. A clean RESTful API is like a fully normalized database — more often than not, you end up needing to stitch data together from multiple queries in order to build up what you need for a given view. Each of those queries involves a request, which can be catastrophically bad for performance.
+</Notes>
+
 ---
 
 # Single endpoint
+
+<Notes>
+  There’s only one endpoint, by convention it is /graphql but it can be anything. You GET it for queries, and you POST it for everything else—creates, updates, and deletions.
+</Notes>
 
 ---
 export default CodeSlide
@@ -198,9 +256,17 @@ mutation {
 }
 ```
 
+<Notes>
+  Mutations look like this, and you can define parameters of specific types, including whether or not those parameters are required and what the return value should be.
+</Notes>
+
 ---
 
 # Server - resolvers
+
+<Notes>
+  So far we’ve talked about the client using GraphQL. But what about the server? The resolvers are where all the magic happens. You can do whatever you want in there. Talk to your database, talk to another API over a network, do both at once—whatever you want.
+</Notes>
 
 ---
 export default CodeSlide
@@ -219,6 +285,10 @@ query {
   }
 }
 ```
+
+<Notes>
+  Type nesting allows joins across data stores - not just from a database.  You can make a single query that gets data from a database and a separate REST API.  The server resolvers would make these requests and return the data matching the GraphQL schema.
+</Notes>
 
 ---
 
