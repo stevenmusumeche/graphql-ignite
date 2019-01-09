@@ -1,72 +1,228 @@
-import {Cite} from 'spectacle';
-import {DarkSlide, CodeSlide} from './slides';
-import RegularComponent from './regular-component';
+import {Cite, Notes, BlockQuote, Quote} from 'spectacle';
+import {DarkSlide, CodeSlide, LightSlide} from './slides';
+import Introspection from './introspection';
 
-# Spectacle MDX!
 
-**open the presentation/index.mdx file to get started**
 
----
-export default DarkSlide
-
-export const transition = ['zoom']
-
-# Write your Spectacle Presentations in Markdown
-## And seamlessly use React Components  
-**How sweet is that**  
-**(super sweet)**
+# Build Better APIs
 
 ---
 
-![datboi](https://pbs.twimg.com/media/CkjFUyTXEAEysBY.jpg)
+![roy](https://pbs.twimg.com/profile_images/2195030209/roy_fielding_sq_400x400.jpg)
+# Roy Fielding & REST
 
-
----
-
-<RegularComponent/>
-
----
-
-###### Typography
-
-# Heading 1
-
-## Heading 2
-
-### Heading 3
-
-#### Heading 4
-
-##### Heading 5
-
-###### Heading 6
-
-Standard Text
-
----
-
-###### Standard List
-
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-
----
-
-> Example Quote
-
-<Cite>Author</Cite>
+<Notes>
+  In 2000, Roy Fielding authored a landmark paper about how to structure hypermedia information systems.  A RESTful web app exposes information about itself in the form of resources.  It also enables the client to take actions on those resources, such as create new resources or change existing resources.
+</Notes>
 
 ---
 export default CodeSlide
 
+# The honeymoon period
+
+```http
+GET    /v1/example.com/products    - Get all products
+GET    /v1/example.com/products/42 - Get product 42
+POST   /v1/example.com/products    - Create a new product
+DELETE /v1/example.com/products/42 - Delete product 42
+```
+
+<Notes>We start off with an API that more or less follows RESTful conventions.  We can operate on the product resource by using the HTTP methods shown here.</Notes>
+
+---
+export default CodeSlide
+
+# The product evolves
+
+```http
+// all existing existing endpoints plus:
+
+GET    /v1/example.com/products?detailed=true
+GET    /v1/example.com/products/42?fields=id,name,image
+GET    /v1/example.com/products/42?brand=sonos
+GET    /v1/example.com/products/42?with=categories
+```
+
+<Notes>As our product evolves to support the business, we have new client needs. Common example when supporting mobile apps is providing different versions of the same resource depending on the client.</Notes>
+
+---
+export default CodeSlide
+
+# "Thousand endpoint problem"
+
+```http
+// all existing existing endpoints plus new v2 versions:
+
+GET    /v2/example.com/products    - Get all products
+GET    /v2/example.com/products/42 - Get product 42
+GET    /v2/example.com/products?detailed=true
+GET    /v2/example.com/products/42?fields=id,name,image
+GET    /v2/example.com/products/42?brand=sonos
+GET    /v2/example.com/products/42?with=categories
+```
+
+<Notes>And then some more time goes by and you realize that you need to fundamentally rework the data that you return, and that’s a breaking change, so you redo the endpoints and bump the version number.</Notes>
+
+---
+
+<div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', color: 'white'}}>
+  <div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/IPhone_3G.png" style={{maxHeight: 400}} />
+    <p>Old Clients</p>
+  </div>
+  <div>
+    <img src="https://i.imgur.com/VLKjY6s.png" style={{maxHeight: 400}} />
+    <p>New Clients</p>
+  </div>
+</div>
+
+---
+
+<div style={{height: '80vh', maxWidth: 'none'}}>
+  <img src="http://siliconvalleyism.com/images/sales-and-engineering.jpg" style={{maxWidth: '100%'}} />
+</div>
+
+---
+
+export default LightSlide
+
+# Too many requests
+
+<img src="https://i.imgur.com/tId4Qn6.png" style={{marginTop: 50}} />
+
+---
+export default CodeSlide
+
+# Overfetching
+
 ```javascript
-class SuperCoolComponent extends React.Component {
-  render() {
-    return (
-      <p>code slide works in markdown too whaaaaat</p>
-    );
+{
+    "id": "5c3567b062ce82e1d9ee1c64",
+    "isActive": true,
+    "balance": "$1,336.36",
+    "picture": "http://placehold.it/32x32",
+    "age": 26,
+    "eyeColor": "green",
+    "nameFirst": "Lynette",
+    "nameLast": "Gallegos",
+    "email": "lynette.gallegos@urbanshee.com",
+    "phone": "+1 (905) 561-3636",
+    "about": "Lorem mollit exercitation ad velit......",
+  },
+```
+
+---
+
+# Missing or incorrect documentation
+
+<img src="https://static.boredpanda.com/blog/wp-content/uploads/2014/10/packaging-fail-funny-you-had-one-job-19__605.jpg" style={{marginTop: 50}} />
+
+---
+export default LightSlide
+
+<img src="https://cdn-images-1.medium.com/max/1000/1*55Tp4JdXkjmDk06cofn6qg.png" />
+
+## a strongly-typed declarative query language
+
+---
+
+# Strongly-typed
+
+---
+
+<img src="https://cdn-images-1.medium.com/max/2000/1*wLrhY74ZTD6_oD7H0eaeRg.gif" style={{maxWidth:'100%', maxHeight: '100%'}} />
+
+<Introspection>Introspective</Introspection>
+
+---
+export default CodeSlide
+
+# Declarative query language
+
+```javascript
+query { 
+  user(id: "123") {
+    id
+    name
+    email
   }
 }
 ```
+
+---
+export default CodeSlide
+
+# Return matches query shape
+
+```javascript
+{
+  "data": {
+    "user": {
+      "id": "123",
+      "name": "Steven Musumeche",
+      "email": "steven@musumeche.com"
+    }
+  }
+}
+```
+
+---
+export default CodeSlide
+
+  <BlockQuote>
+    <Quote textSize={60}>
+      Can you add this option to get the data back without this field and with that extra field for that new view I'm making?
+    </Quote>
+    <Cite>every frontend developer ever</Cite>
+  </BlockQuote>
+
+---
+
+# Mobile device latency and low-memory
+
+---
+
+# Single endpoint
+
+---
+export default CodeSlide
+
+# Mutations
+
+```
+mutation {
+  addComment(postId: "123", body: "my comment..") {
+    commentId
+    permalink
+  }
+}
+```
+
+---
+
+# Server - resolvers
+
+---
+export default CodeSlide
+
+# Type nesting
+
+```
+query { 
+  user(id: "123") {
+    id
+    name
+    friends { // <-- could come from different data store
+      id
+      name
+    }
+  }
+}
+```
+
+---
+
+# Try it out
+
+### Github GraphQL API Explorer
+https://developer.github.com/v4/explorer/
