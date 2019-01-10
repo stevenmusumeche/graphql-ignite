@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import Redbox from "redbox-react";
-import { Deck, Slide } from 'spectacle';
-import components from './presentation/components';
+import { Deck, Slide } from "spectacle";
+import components from "./presentation/components";
 import slides, { transitions } from "./presentation/index.mdx";
-import theme from './presentation/theme';
+import theme from "./presentation/theme";
 
 require("normalize.css");
 
@@ -21,20 +21,26 @@ const creeperTransition = (transitioning, forward) => {
   return {
     transform: `
       translate3d(0,${transitioning ? offset : 0}%, 0)
-    `,
+    `
   };
 };
 
 ReactDOM.render(
   <AppContainer errorReporter={CustomErrorReporter}>
-    <Deck transition={[creeperTransition]} transitionDuration={500} theme={theme} autoplay={true} autoplayDuration={15000} autoplayLoop={false}>
+    {/* swap the next two lines to enable auto-advancing slides every 15 seconds */}
+    {/* <Deck transition={[creeperTransition]} transitionDuration={500} theme={theme} autoplay={true} autoplayDuration={15000} autoplayLoop={false}> */}
+    <Deck
+      transition={[creeperTransition]}
+      transitionDuration={500}
+      theme={theme}
+    >
       {slides.map((S, i) => {
         let transition = transitions[i] || null;
         return <S transition={transition} key={`slide-${i}`} />;
       })}
     </Deck>
   </AppContainer>,
-  document.getElementById("root"),
+  document.getElementById("root")
 );
 
 if (module.hot) {
@@ -43,14 +49,18 @@ if (module.hot) {
     const newSlides = require("./presentation/index.mdx").default;
     ReactDOM.render(
       <AppContainer errorReporter={CustomErrorReporter}>
-        <Deck transition={[creeperTransition]} transitionDuration={500} theme={newTheme}>
+        <Deck
+          transition={[creeperTransition]}
+          transitionDuration={500}
+          theme={newTheme}
+        >
           {newSlides.map((S, i) => {
             let transition = transitions[i] || null;
             return <S transition={transition} key={`slide-${i}`} />;
           })}
         </Deck>
       </AppContainer>,
-      document.getElementById("root"),
+      document.getElementById("root")
     );
   });
 }
